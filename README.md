@@ -15,9 +15,9 @@ In the background, [chatgpt-api](https://github.com/transitive-bullshit/chatgpt-
 1. Run with `node index.js`
 2. Browser window opens, solve the reCAPTCHA
 3. Done. Server is serving on `localhost:3000`. Endpoints:
-  * `POST /api/chat`, accepts JSON data containing message to send to ChatGPT: `{"message": "Hello world"}`. Subsequent requests are followed-up by default.
-  * `GET /api/reinit` to reauthenticate with OpenAI.
-  * `GET /api/reset` to start a new conversation.
+    * `POST /api/chat`, accepts JSON data containing message to send to ChatGPT: `{"message": "Hello world"}`. Subsequent requests are followed-up by default.
+    * `GET /api/reinit` to reauthenticate with OpenAI.
+    * `GET /api/reset` to start a new conversation.
 
 ## Issues
 
