@@ -10,7 +10,7 @@ Simple Express server to interface with ChatGPT. Uses [chatgpt-api](https://gith
 
 ## Running
 
-In the background, [chatgpt-api](https://github.com/transitive-bullshit/chatgpt-api) is being used to interact with ChatGPT, which uses `puppeteer` to spawn a browser window. Meaning, a non-headless server that display a browser window is required to run this.
+In the background, [chatgpt-api](https://github.com/transitive-bullshit/chatgpt-api) is being used to interact with ChatGPT, which uses `puppeteer` to spawn a browser window. Meaning, a non-headless server that can display a browser window is required to run this.
 
 1. Run with `node index.js`
 2. Browser window opens, solve the reCAPTCHA
