@@ -55,4 +55,6 @@ app.post('/api/chat', async (req, res) => {
   }
 })
 
-app.listen(3000, () => console.log('Server listening on port 3000'))
+app.listen(process.env.PORT, process.env.HOST, () =>
+  console.log('Server listening on port 3000')
+)
