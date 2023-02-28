@@ -1,52 +1,39 @@
-import { ChatGPTAPIBrowser } from 'chatgpt'
+import { ChatGPTAPI } from 'chatgpt'
 import * as dotenv from 'dotenv'
 import express from 'express'
 dotenv.config()
 
-const api = new ChatGPTAPIBrowser({
-  email: process.env.OPENAI_EMAIL,
-  password: process.env.OPENAI_PASSWORD,
+const api = new ChatGPTAPI({
+  apiKey: process.env.OPENAI_API_KEY,
 })
-await api.initSession()
 
 const app = express()
 app.use(express.json())
 
-let data
-
-app.get('/api/reinit', async (req, res) => {
-  try {
-    await api.initSession()
-    console.log('\n=== CHAT REINIT ===')
-    console.log('Continuing conversation...')
-    res.json({ status: 'ok' })
-  } catch (err) {
-    console.error(err)
-    res.status(500).send('Error reinitializing')
-  }
-})
+let savedIds = {}
 
 app.get('/api/reset', (req, res) => {
-  data = undefined
+  savedIds = {}
   console.log('\n=== CHAT RESET ===')
   res.json({ status: 'ok' })
 })
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message } = req.body
-    console.log('\nQ: ' + message)
+    const { message, channel } = req.body
+    console.log(`\n[${channel}] Q: ${message}`)
 
-    data = await api.sendMessage(
+    const data = await api.sendMessage(
       message,
-      data
+      savedIds[channel] !== undefined
         ? {
-            conversationId: data.conversationId,
-            parentMessageId: data.messageId,
+            conversationId: savedIds[channel][0],
+            parentMessageId: savedIds[channel][1],
           }
         : {}
     )
-    console.log('\nA: ' + data.response)
+    console.log(`\n[${channel}] A: ${data.response}`)
+    savedIds[channel] = [data.conversationId, data.messageId]
 
     res.json(data)
   } catch (err) {
