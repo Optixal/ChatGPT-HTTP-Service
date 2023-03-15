@@ -1,11 +1,15 @@
-import { ChatGPTAPI } from 'chatgpt'
+import { ChatGPTAPIBrowser } from 'chatgpt'
 import * as dotenv from 'dotenv'
 import express from 'express'
 dotenv.config()
 
-const api = new ChatGPTAPI({
-  apiKey: process.env.OPENAI_API_KEY,
+const api = new ChatGPTAPIBrowser({
+  email: process.env.OPENAI_EMAIL,
+  password: process.env.OPENAI_PASSWORD,
+  isProAccount: process.env.OPENAI_PRO,
 })
+
+await api.initSession()
 
 const app = express()
 app.use(express.json())
@@ -20,18 +24,17 @@ app.get('/api/reset', (req, res) => {
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, channel } = req.body
+    const { message, channel, model } = req.body
     console.log(`\n[${channel}] Q: ${message}`)
 
-    const data = await api.sendMessage(
-      message,
-      savedIds[channel] !== undefined
-        ? {
-            conversationId: savedIds[channel][0],
-            parentMessageId: savedIds[channel][1],
-          }
-        : {}
-    )
+    const opts = {}
+    if (model !== undefined) opts.model = model
+    if (channel !== undefined && savedIds[channel] !== undefined) {
+      opts.conversationId = savedIds[channel][0]
+      opts.parentMessageId = savedIds[channel][1]
+    }
+
+    const data = await api.sendMessage(message, opts)
     console.log(`\n[${channel}] A: ${data.response}`)
     savedIds[channel] = [data.conversationId, data.messageId]
 
