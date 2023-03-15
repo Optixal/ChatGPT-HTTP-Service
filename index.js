@@ -25,7 +25,7 @@ app.get('/api/reset', (req, res) => {
 app.post('/api/chat', async (req, res) => {
   try {
     const { message, channel, model } = req.body
-    console.log(`\n[${channel}] Q: ${message}`)
+    console.log(`\n[${channel}] [${model}] Q: ${message}`)
 
     const opts = {}
     if (model !== undefined) opts.model = model
@@ -35,7 +35,7 @@ app.post('/api/chat', async (req, res) => {
     }
 
     const data = await api.sendMessage(message, opts)
-    console.log(`\n[${channel}] A: ${data.response}`)
+    console.log(`\n[${channel}] [${model}] A: ${data.response}`)
     savedIds[channel] = [data.conversationId, data.messageId]
 
     res.json(data)
